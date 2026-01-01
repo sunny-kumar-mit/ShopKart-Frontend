@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import api from '@/services/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,17 +35,21 @@ export default function Register() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    mobile: `${countryCode}${formData.mobile}`
-                }),
+            const response = await api.post('/api/auth/register', {
+                ...formData,
+                mobile: `${countryCode}${formData.mobile}`
             });
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Failed to send OTP');
+            // const data = await response.json(); // Axios returns data in response.data, but response variable here is the axios response object
+            // The interceptor doesn't unwrap response.data, wait.
+            // My interceptor: "api.interceptors.response.use((response) => response, ...)"
+            // So response is the full axios response. data is in response.data.
+            // But wait, UserService: "return response.data;".
+            // Here in Register.tsx, I should access `response.data`.
+
+            // if (!response.ok) ... handled by interceptor (throws if status not 2xx)
+
+            const data = response.data; // Assign for consistent usage below
 
             toast.success('OTPs sent to Email and Mobile!');
             setStep(2);
@@ -60,18 +65,14 @@ export default function Register() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/verify-otp`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    identifier: formData.email,
-                    emailOtp: otps.email,
-                    mobileOtp: otps.mobile
-                }),
+            const response = await api.post('/api/auth/verify-otp', {
+                identifier: formData.email,
+                emailOtp: otps.email,
+                mobileOtp: otps.mobile
             });
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Verification failed');
+            const data = response.data;
+            // if (!response.ok) throw new Error(data.message || 'Verification failed'); handled by interceptor
 
             // Store token and user data
             const userData = { ...data.user, token: data.token };

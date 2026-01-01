@@ -1,15 +1,5 @@
-import { useAuthStore } from '@/store/authStore';
+import api from './api';
 import { Address, AddressFormData } from '@/types/address';
-
-const API_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/addresses`;
-
-const getHeaders = () => {
-    const token = useAuthStore.getState().user?.token;
-    return {
-        'Content-Type': 'application/json',
-        'x-auth-token': token || '',
-    };
-};
 
 // ============================
 // PINCODE LOOKUP (INDIA)
@@ -38,53 +28,30 @@ export const AddressService = {
     // ADDRESS CRUD
     // ============================
     getAll: async (): Promise<Address[]> => {
-        const response = await fetch(API_URL, { headers: getHeaders() });
-        if (!response.ok) throw new Error('Failed to fetch addresses');
-        return response.json();
+        const response = await api.get('/api/addresses');
+        return response.data;
     },
 
     add: async (data: AddressFormData): Promise<Address> => {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: getHeaders(),
-            body: JSON.stringify(data),
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Failed to add address');
-        return result;
+        const response = await api.post('/api/addresses', data);
+        return response.data;
     },
 
     update: async (id: string, data: AddressFormData): Promise<Address> => {
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: 'PUT',
-            headers: getHeaders(),
-            body: JSON.stringify(data),
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Failed to update address');
-        return result;
+        const response = await api.put(`/api/addresses/${id}`, data);
+        return response.data;
     },
 
     delete: async (id: string): Promise<void> => {
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: 'DELETE',
-            headers: getHeaders(),
-        });
-        if (!response.ok) throw new Error('Failed to delete address');
+        await api.delete(`/api/addresses/${id}`);
     },
 
     setDefault: async (id: string): Promise<Address> => {
-        const response = await fetch(`${API_URL}/${id}/default`, {
-            method: 'PATCH',
-            headers: getHeaders(),
-        });
-        if (!response.ok) throw new Error('Failed to set default address');
-        return response.json();
+        const response = await api.patch(`/api/addresses/${id}/default`);
+        return response.data;
     },
 
     fetchPincodeDetails,
-
-
 
     // ============================
     // HIGH ACCURACY LOCATION

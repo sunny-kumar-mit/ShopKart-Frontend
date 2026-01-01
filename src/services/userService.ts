@@ -1,66 +1,29 @@
+import api from './api';
 import { useAuthStore } from '@/store/authStore';
-
-const API_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/user`;
-
-const getHeaders = () => {
-    const token = useAuthStore.getState().user?.token;
-    return {
-        'Content-Type': 'application/json',
-        'x-auth-token': token || ''
-    };
-};
 
 export const UserService = {
     getProfile: async () => {
-        const response = await fetch(`${API_URL}/profile`, {
-            method: 'GET',
-            headers: getHeaders()
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message || 'Failed to fetch profile');
-        return data;
+        const response = await api.get('/api/user/profile');
+        return response.data;
     },
 
     updateProfile: async (data: any) => {
-        const response = await fetch(`${API_URL}/profile`, {
-            method: 'PUT',
-            headers: getHeaders(),
-            body: JSON.stringify(data)
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Failed to update profile');
-        return result;
+        const response = await api.put('/api/user/profile', data);
+        return response.data;
     },
 
     initiateChangePassword: async (currentPassword: string) => {
-        const response = await fetch(`${API_URL}/change-password/init`, {
-            method: 'POST',
-            headers: getHeaders(),
-            body: JSON.stringify({ currentPassword })
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Failed to initiate password change');
-        return result;
+        const response = await api.post('/api/user/change-password/init', { currentPassword });
+        return response.data;
     },
 
     verifyChangePasswordOTP: async (data: any) => {
-        const response = await fetch(`${API_URL}/change-password/verify`, {
-            method: 'POST',
-            headers: getHeaders(),
-            body: JSON.stringify(data)
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Failed to verify OTP');
-        return result;
+        const response = await api.post('/api/user/change-password/verify', data);
+        return response.data;
     },
 
     deleteAccount: async () => {
-        const response = await fetch(`${API_URL}/delete-account`, {
-            method: 'DELETE',
-            headers: getHeaders()
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Failed to delete account');
-        return result;
+        const response = await api.delete('/api/user/delete-account');
+        return response.data;
     }
 };

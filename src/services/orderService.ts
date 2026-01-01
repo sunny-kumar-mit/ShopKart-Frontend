@@ -1,62 +1,30 @@
-import { useAuthStore } from '@/store/authStore';
+import api from './api';
 import { Order } from '@/types/order';
-
-const API_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/orders`;
-
-const getHeaders = () => {
-    const token = useAuthStore.getState().user?.token;
-    return {
-        'Content-Type': 'application/json',
-        'x-auth-token': token || '',
-    };
-};
 
 export const OrderService = {
     getMyOrders: async (): Promise<Order[]> => {
-        const response = await fetch(API_URL, {
-            headers: getHeaders(),
-        });
-        if (!response.ok) throw new Error('Failed to fetch orders');
-        return response.json();
+        const response = await api.get('/api/orders');
+        return response.data;
     },
 
     getOrderById: async (id: string): Promise<Order> => {
-        const response = await fetch(`${API_URL}/${id}`, {
-            headers: getHeaders(),
-        });
-        if (!response.ok) throw new Error('Failed to fetch order details');
-        return response.json();
+        const response = await api.get(`/api/orders/${id}`);
+        return response.data;
     },
 
     cancelOrder: async (id: string): Promise<Order> => {
-        const response = await fetch(`${API_URL}/${id}/cancel`, {
-            method: 'PATCH',
-            headers: getHeaders(),
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Failed to cancel order');
-        return result;
+        const response = await api.patch(`/api/orders/${id}/cancel`);
+        return response.data;
     },
 
     returnOrder: async (id: string): Promise<Order> => {
-        const response = await fetch(`${API_URL}/${id}/return`, {
-            method: 'PATCH',
-            headers: getHeaders(),
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Failed to return order');
-        return result;
+        const response = await api.patch(`/api/orders/${id}/return`);
+        return response.data;
     },
 
     // Mock order creation for testing
     createMockOrder: async (orderData: any): Promise<Order> => {
-        const response = await fetch(`${API_URL}/mock`, {
-            method: 'POST',
-            headers: getHeaders(),
-            body: JSON.stringify(orderData),
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Failed to create mock order');
-        return result;
+        const response = await api.post('/api/orders/mock', orderData);
+        return response.data;
     }
 };

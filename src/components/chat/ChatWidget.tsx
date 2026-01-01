@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import api from '@/services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -54,6 +55,7 @@ export function ChatWidget() {
         setInput('');
         setLoading(true);
 
+
         try {
             // Prepare Context
             const context = {
@@ -62,16 +64,12 @@ export function ChatWidget() {
                 availableCoupons: COUPONS.map(c => c.code),
             };
 
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/chat`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
-                    context
-                })
+            const response = await api.post('/api/chat', {
+                messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
+                context
             });
 
-            const data = await response.json();
+            const data = response.data;
 
             // Handle AI Action Response (JSON)
             if (data.action) {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import api from '@/services/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -52,14 +53,14 @@ export default function Login() {
         }
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ identifier, password }),
+            const response = await api.post('/api/auth/login', {
+                identifier,
+                password
             });
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Login failed');
+            // const data = await response.json();
+            const data = response.data;
+            // if (!response.ok) ... handled by interceptor
 
             toast.success('OTP sent!');
             setStep(2);
@@ -83,14 +84,12 @@ export default function Login() {
         }
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/verify-otp`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ identifier, otp }),
+            const response = await api.post('/api/auth/verify-otp', {
+                identifier, otp
             });
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Verification failed');
+            const data = response.data;
+            // if (!response.ok) ...
 
             // Store token and user data
             const userData = { ...data.user, token: data.token };
@@ -111,13 +110,11 @@ export default function Login() {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/forgot-password`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ identifier: forgotIdentifier }),
+            const response = await api.post('/api/auth/forgot-password', {
+                identifier: forgotIdentifier
             });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Failed to send OTP');
+            const data = response.data;
+            // if (!response.ok) ...
             toast.success('OTPs sent to your Email and Mobile');
             setForgotStep(2);
         } catch (error: any) {
@@ -134,18 +131,14 @@ export default function Login() {
         }
         setLoading(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/reset-password`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    identifier: forgotIdentifier,
-                    emailOtp: forgotOtpValues.emailOtp,
-                    mobileOtp: forgotOtpValues.mobileOtp,
-                    newPassword
-                }),
+            const response = await api.post('/api/auth/reset-password', {
+                identifier: forgotIdentifier,
+                emailOtp: forgotOtpValues.emailOtp,
+                mobileOtp: forgotOtpValues.mobileOtp,
+                newPassword
             });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Failed to reset password');
+            const data = response.data;
+            // if (!response.ok) ...
             toast.success('Password reset successfully! You can now login.');
             setForgotStep(0); // Close modal
             setStep(1); // Go to login
@@ -262,7 +255,7 @@ export default function Login() {
                                     variant="outline"
                                     type="button"
                                     className="w-full"
-                                    onClick={() => window.location.href = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/google`}
+                                    onClick={() => window.location.href = `${import.meta.env.VITE_API_BASE_URL}/api/auth/google`}
                                 >
                                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                                         <path
