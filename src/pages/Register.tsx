@@ -55,7 +55,6 @@ export default function Register() {
             toast.success('OTPs sent to Email and Mobile!');
             setStep(2);
         } catch (error: any) {
-            console.error('Registration Error Details:', error);
 
             // "Nuclear" error text construction to catch ANY variation of the error
             const fullErrorText = (
@@ -63,8 +62,6 @@ export default function Register() {
                 (error.response?.data?.message || '') +
                 JSON.stringify(error.response?.data || {})
             ).toLowerCase();
-
-            console.log('Checked Error Text:', fullErrorText);
 
             if (
                 fullErrorText.includes('cloud mode restriction') ||
@@ -119,7 +116,7 @@ export default function Register() {
             <div className="flex items-center justify-center min-h-[60vh] py-10">
                 <Card className="w-full max-w-md">
                     <CardHeader>
-                        <CardTitle>{step === 1 ? 'Create an Account (v2)' : 'Verify Account'}</CardTitle>
+                        <CardTitle>{step === 1 ? 'Create an Account' : 'Verify Account'}</CardTitle>
                         <CardDescription>
                             {step === 1
                                 ? 'Enter your details to get started'
@@ -204,15 +201,15 @@ export default function Register() {
                         isRestricted ? (
                             <CardContent className="space-y-6 pt-4">
                                 <div className="text-center space-y-4">
-                                    <h3 className="text-lg font-semibold text-primary">Thank you for trying ShopKart 😊</h3>
+                                    <h3 className="text-lg font-semibold text-primary">Thank you for exploring ShopKart 😊</h3>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        This is currently a testing version of our application.
+                                        This is currently a preview version of our application, created for testing and demonstration purposes.
                                     </p>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        At the moment, verification codes can only be sent to limited test accounts while our email and SMS services are being finalized.
+                                        At the moment, verification codes are available only for selected test accounts while our email and SMS services are being finalized.
                                     </p>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        You can still continue using the app by signing in directly or by using Google authentication below.
+                                        You’re welcome to continue using the app by signing in directly, or by choosing Google authentication below.
                                     </p>
                                 </div>
 
