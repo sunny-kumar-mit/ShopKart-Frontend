@@ -96,7 +96,6 @@ export default function Login() {
             toast.success('OTP sent!');
             setStep(2);
         } catch (error: any) {
-            console.error('Login Error Details:', error);
 
             // "Nuclear" error text construction
             const fullErrorText = (
@@ -344,15 +343,15 @@ export default function Login() {
                         isRestricted ? (
                             <CardContent className="space-y-6 pt-4">
                                 <div className="text-center space-y-4">
-                                    <h3 className="text-lg font-semibold text-primary">Thank you for trying ShopKart 😊</h3>
+                                    <h3 className="text-lg font-semibold text-primary">Thank you for exploring ShopKart 😊</h3>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        This is currently a testing version of our application.
+                                        This is currently a preview version of our application, created for testing and demonstration purposes.
                                     </p>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        At the moment, verification codes can only be sent to limited test accounts while our email and SMS services are being finalized.
+                                        At the moment, verification codes are available only for selected test accounts while our email and SMS services are being finalized.
                                     </p>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        You can still continue using the app by signing in directly or by using Google authentication below.
+                                        You’re welcome to continue using the app by signing in directly, or by choosing Google authentication below.
                                     </p>
                                 </div>
 
