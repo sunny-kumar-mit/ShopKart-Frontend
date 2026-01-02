@@ -38,8 +38,11 @@ api.interceptors.response.use(
     (error) => {
         // Extract error message from backend response if available
         const message = error.response?.data?.message || error.message || 'Something went wrong';
-        // Reject with a standard Error object containing the message
-        return Promise.reject(new Error(message));
+
+        // Update the error message but preserve the original error object (so status/response are available)
+        error.message = message;
+
+        return Promise.reject(error);
     }
 );
 

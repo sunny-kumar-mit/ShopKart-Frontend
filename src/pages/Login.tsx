@@ -96,14 +96,25 @@ export default function Login() {
             toast.success('OTP sent!');
             setStep(2);
         } catch (error: any) {
-            // Check for specific backend trial restriction error or common SMS trial errors
-            const errorMessage = error.response?.data?.message || error.message || '';
+            console.error('Login Error Details:', error);
+
+            // "Nuclear" error text construction
+            const fullErrorText = (
+                (error.message || '') +
+                (error.response?.data?.message || '') +
+                JSON.stringify(error.response?.data || {})
+            ).toLowerCase();
+
             if (
-                errorMessage.includes('Cloud Mode Restriction') ||
-                errorMessage.includes('verified') ||
-                errorMessage.includes('trial') ||
-                errorMessage.includes('validation_error') ||
-                error.response?.status === 500
+                fullErrorText.includes('cloud mode restriction') ||
+                fullErrorText.includes('verified') ||
+                fullErrorText.includes('trial') ||
+                fullErrorText.includes('validation_error') ||
+                fullErrorText.includes('testing emails') ||
+                fullErrorText.includes('verify a domain') ||
+                fullErrorText.includes('resend.com') ||
+                error.response?.status === 500 ||
+                error.response?.status === 403
             ) {
                 setIsRestricted(true);
                 setStep(2); // Advance to step 2 but show restricted UI

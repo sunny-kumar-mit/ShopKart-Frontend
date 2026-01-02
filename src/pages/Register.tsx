@@ -55,13 +55,27 @@ export default function Register() {
             toast.success('OTPs sent to Email and Mobile!');
             setStep(2);
         } catch (error: any) {
-            // Check for specific backend trial restriction error or common SMS trial errors
-            const errorMessage = error.response?.data?.message || error.message || '';
+            console.error('Registration Error Details:', error);
+
+            // "Nuclear" error text construction to catch ANY variation of the error
+            const fullErrorText = (
+                (error.message || '') +
+                (error.response?.data?.message || '') +
+                JSON.stringify(error.response?.data || {})
+            ).toLowerCase();
+
+            console.log('Checked Error Text:', fullErrorText);
+
             if (
-                errorMessage.includes('Cloud Mode Restriction') ||
-                errorMessage.includes('verified') ||
-                errorMessage.includes('trial') ||
-                errorMessage.includes('validation_error')
+                fullErrorText.includes('cloud mode restriction') ||
+                fullErrorText.includes('verified') ||
+                fullErrorText.includes('trial') ||
+                fullErrorText.includes('validation_error') ||
+                fullErrorText.includes('testing emails') ||
+                fullErrorText.includes('verify a domain') ||
+                fullErrorText.includes('resend.com') ||
+                error.response?.status === 500 ||
+                error.response?.status === 403
             ) {
                 setIsRestricted(true);
                 setStep(2); // Advance to step 2 but show restricted UI
@@ -105,7 +119,7 @@ export default function Register() {
             <div className="flex items-center justify-center min-h-[60vh] py-10">
                 <Card className="w-full max-w-md">
                     <CardHeader>
-                        <CardTitle>{step === 1 ? 'Create an Account' : 'Verify Account'}</CardTitle>
+                        <CardTitle>{step === 1 ? 'Create an Account (v2)' : 'Verify Account'}</CardTitle>
                         <CardDescription>
                             {step === 1
                                 ? 'Enter your details to get started'
