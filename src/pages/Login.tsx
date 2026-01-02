@@ -74,6 +74,7 @@ export default function Login() {
     const handleSendOtp = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        setIsRestricted(false); // Reset restriction state on new attempt
 
         // Construct identifier based on method
         let identifier = '';
