@@ -23,6 +23,7 @@ import CouponsPage from "./pages/CouponsPage";
 import HelpCenter from "./pages/HelpCenter";
 import SearchPage from "./pages/SearchPage";
 import NotFound from "./pages/NotFound";
+import MobileAccount from "./pages/MobileAccount";
 import { ChatWidget } from "./components/chat/ChatWidget";
 
 const queryClient = new QueryClient();
@@ -60,6 +61,7 @@ const App = () => (
           <Route path="/help" element={<HelpCenter />} />
           <Route path="/search" element={<SearchPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/account" element={<MobileAccount />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

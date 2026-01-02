@@ -246,14 +246,25 @@ export function Header() {
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-card border-t shadow-xl animate-slide-up">
           <nav className="container py-4 space-y-2">
-            <Link
-              to="/login"
-              className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <User className="h-5 w-5 text-primary" />
-              <span>Login / Sign Up</span>
-            </Link>
+            {user ? (
+              <Link
+                to="/account"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <User className="h-5 w-5 text-primary" />
+                <span>My Account</span>
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <User className="h-5 w-5 text-primary" />
+                <span>Login / Sign Up</span>
+              </Link>
+            )}
 
           </nav>
         </div>

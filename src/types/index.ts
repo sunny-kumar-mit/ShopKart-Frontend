@@ -37,6 +37,7 @@ export interface User {
   name: string;
   avatar?: string;
   role: 'buyer' | 'seller' | 'admin';
+  mobile?: string;
 }
 
 export interface Review {
