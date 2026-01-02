@@ -34,6 +34,7 @@ export default function Register() {
     const handleSendOtp = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        setIsRestricted(false); // Reset restriction state on new attempt
 
         try {
             const response = await api.post('/api/auth/register', {
