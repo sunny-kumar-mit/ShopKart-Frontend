@@ -40,6 +40,36 @@ export default function Login() {
     const [forgotOtpValues, setForgotOtpValues] = useState({ emailOtp: '', mobileOtp: '' });
     const [newPassword, setNewPassword] = useState('');
 
+    // Resend OTP State
+    const [timer, setTimer] = useState(30);
+    const [canResend, setCanResend] = useState(false);
+
+    useEffect(() => {
+        let interval: any;
+        if (step === 2 && timer > 0) {
+            interval = setInterval(() => {
+                setTimer((prev) => prev - 1);
+            }, 1000);
+        } else if (timer === 0) {
+            setCanResend(true);
+        }
+        return () => clearInterval(interval);
+    }, [timer, step]);
+
+    const handleResendOtp = async () => {
+        setLoading(true);
+        try {
+            await handleSendOtp({ preventDefault: () => { } } as any);
+            setTimer(30);
+            setCanResend(false);
+            // toast.success('OTP Resent!'); // handleSendOtp already toasts
+        } catch (error) {
+            // Error handled in handleSendOtp
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleSendOtp = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -300,6 +330,23 @@ export default function Login() {
                                         maxLength={6}
                                         className="text-center text-2xl tracking-widest"
                                     />
+                                    <div className="text-center text-sm">
+                                        {canResend ? (
+                                            <Button
+                                                type="button"
+                                                variant="link"
+                                                className="text-primary p-0 h-auto"
+                                                onClick={handleResendOtp}
+                                                disabled={loading}
+                                            >
+                                                Resend OTP
+                                            </Button>
+                                        ) : (
+                                            <span className="text-muted-foreground">
+                                                Resend OTP in {timer}s
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </CardContent>
                             <CardFooter className="flex flex-col space-y-4">
