@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { Layout } from '@/components/layout/Layout';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/store/authStore';
-import { TypewriterText } from '@/components/ui/typewriter-text';
 
 import {
     Select,
@@ -120,7 +119,7 @@ export default function Register() {
             <div className="flex items-center justify-center min-h-[60vh] py-10">
                 <Card className="w-full max-w-md">
                     <CardHeader>
-                        <CardTitle>{step === 1 ? 'Create an Account' : 'Verify Account'}</CardTitle>
+                        <CardTitle>{step === 1 ? 'Create an Account (v2)' : 'Verify Account'}</CardTitle>
                         <CardDescription>
                             {step === 1
                                 ? 'Enter your details to get started'
@@ -205,36 +204,19 @@ export default function Register() {
                         isRestricted ? (
                             <CardContent className="space-y-6 pt-4">
                                 <div className="text-center space-y-4">
-                                    <h3 className="text-lg font-semibold text-primary">
-                                        <TypewriterText text="Thank you for exploring ShopKart 😊" speed={40} />
-                                    </h3>
-
-                                    <div className="text-muted-foreground text-sm leading-relaxed space-y-3">
-                                        <p>
-                                            <TypewriterText
-                                                text="This is currently a preview version of our application, created for testing and demonstration purposes."
-                                                speed={20}
-                                                delay={1500}
-                                            />
-                                        </p>
-                                        <p>
-                                            <TypewriterText
-                                                text="At the moment, verification codes are available only for selected test accounts while our email and SMS services are being finalized."
-                                                speed={15}
-                                                delay={4000}
-                                            />
-                                        </p>
-                                        <p>
-                                            <TypewriterText
-                                                text="You’re welcome to continue using the app by signing in directly, or by choosing Google authentication below."
-                                                speed={15}
-                                                delay={8000}
-                                            />
-                                        </p>
-                                    </div>
+                                    <h3 className="text-lg font-semibold text-primary">Thank you for trying ShopKart 😊</h3>
+                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                        This is currently a testing version of our application.
+                                    </p>
+                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                        At the moment, verification codes can only be sent to limited test accounts while our email and SMS services are being finalized.
+                                    </p>
+                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                        You can still continue using the app by signing in directly or by using Google authentication below.
+                                    </p>
                                 </div>
 
-                                <div className="space-y-3 pt-2 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 fill-mode-forwards">
+                                <div className="space-y-3 pt-2">
                                     <Button
                                         className="w-full"
                                         variant="default"
