@@ -96,8 +96,15 @@ export default function Login() {
             toast.success('OTP sent!');
             setStep(2);
         } catch (error: any) {
-            // Check for specific backend trial restriction error
-            if (error.response?.data?.message?.includes('Cloud Mode Restriction') || error.message?.includes('Cloud Mode Restriction')) {
+            // Check for specific backend trial restriction error or common SMS trial errors
+            const errorMessage = error.response?.data?.message || error.message || '';
+            if (
+                errorMessage.includes('Cloud Mode Restriction') ||
+                errorMessage.includes('verified') ||
+                errorMessage.includes('trial') ||
+                errorMessage.includes('validation_error') ||
+                error.response?.status === 500
+            ) {
                 setIsRestricted(true);
                 setStep(2); // Advance to step 2 but show restricted UI
             } else {
@@ -331,10 +338,10 @@ export default function Login() {
                                         This is currently a testing version of our application.
                                     </p>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        At the moment, verification codes are limited to test accounts while our email and SMS services are being finalized.
+                                        At the moment, verification codes can only be sent to limited test accounts while our email and SMS services are being finalized.
                                     </p>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        You can continue by signing in directly or using Google authentication below.
+                                        You can still continue using the app by signing in directly or by using Google authentication below.
                                     </p>
                                 </div>
 
@@ -344,7 +351,7 @@ export default function Login() {
                                         variant="default"
                                         onClick={() => setStep(1)}
                                     >
-                                        Continue with Login
+                                        Continue to Login
                                     </Button>
 
                                     <Button
